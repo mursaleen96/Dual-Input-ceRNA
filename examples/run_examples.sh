@@ -1,0 +1,121 @@
+#!/bin/bash
+
+# Example usage script for ceRNA Discovery Pipeline
+# This script demonstrates different ways to run the pipeline
+
+set -e  # Exit on any error
+
+echo "================================="
+echo "ceRNA Pipeline Example Usage"  
+echo "================================="
+
+# Define example data paths (replace with your actual data)
+RNA_DATA="/path/to/your/rna_seq_counts.csv"
+MIRNA_DATA="/path/to/your/mirna_seq_counts.csv"
+
+# Check if example data exists (for demo purposes, we'll skip this check)
+# if [[ ! -f "$RNA_DATA" ]] || [[ ! -f "$MIRNA_DATA" ]]; then
+#     echo "ERROR: Please update RNA_DATA and MIRNA_DATA paths with your actual data files"
+#     exit 1
+# fi
+
+echo "Example 1: Basic Usage (Minimal Parameters)"
+echo "-------------------------------------------"
+echo "Command:"
+echo "python cerna_pipeline_main.py \\"
+echo "    --rna-input $RNA_DATA \\"
+echo "    --mirna-input $MIRNA_DATA"
+echo ""
+
+echo "Example 2: High-Performance Usage (Multi-core)"
+echo "----------------------------------------------"
+echo "Command:"
+echo "python cerna_pipeline_main.py \\"
+echo "    --rna-input $RNA_DATA \\"
+echo "    --mirna-input $MIRNA_DATA \\"
+echo "    --threads 16 \\"
+echo "    --latency-wait 30"
+echo ""
+
+echo "Example 3: Custom Configuration"
+echo "------------------------------"
+echo "Command:"
+echo "python cerna_pipeline_main.py \\"
+echo "    --rna-input $RNA_DATA \\"
+echo "    --mirna-input $MIRNA_DATA \\"
+echo "    --config config/config.yaml \\"
+echo "    --threads 8"
+echo ""
+
+echo "Example 4: Running Individual Stages (Advanced)"
+echo "-----------------------------------------------"
+echo "You can also run individual stages using Snakemake directly:"
+echo ""
+echo "# Run only QC and normalization:"
+echo "snakemake --cores 4 results/norm_counts.csv"
+echo ""
+echo "# Run only feature engineering:"
+echo "snakemake --cores 4 results/features.pkl"
+echo ""
+echo "# Run only statistical validation:"
+echo "snakemake --cores 4 results/validated_triplets_ranked.csv"
+echo ""
+echo "# Generate only the final report:"
+echo "snakemake --cores 4 results/cerna_analysis_report.html"
+echo ""
+
+echo "Example Data Format Requirements:"
+echo "================================"
+echo ""
+echo "RNA-seq counts file (CSV format):"
+echo "-----------------------------------"
+echo "Gene_ID,Sample1,Sample2,Sample3,..."
+echo "ENSG00000000003,150,200,175,..."
+echo "ENSG00000000005,50,75,60,..."
+echo "..."
+echo ""
+echo "miRNA-seq counts file (CSV format):"
+echo "------------------------------------"
+echo "miRNA_ID,Sample1,Sample2,Sample3,..."
+echo "hsa-let-7a-5p,1000,1200,950,..."
+echo "hsa-miR-21-5p,500,600,450,..."
+echo "..."
+echo ""
+echo "IMPORTANT: Sample column names must match exactly between files!"
+echo ""
+
+echo "Expected Output Files:"
+echo "====================="
+echo "Key results will be saved in the 'results/' directory:"
+echo "- validated_triplets_ranked.csv (main results)"
+echo "- cerna_analysis_report.html (interactive report)"
+echo "- cerna_network.graphml (network for analysis)"
+echo "- centrality_scores.csv (network statistics)"
+echo ""
+
+echo "Monitoring Pipeline Progress:"
+echo "============================"
+echo "Watch the pipeline progress with:"
+echo "tail -f .snakemake/log/*.log"
+echo ""
+echo "Or run with verbose output:"
+echo "snakemake --cores 8 --verbose"
+echo ""
+
+echo "Troubleshooting Tips:"
+echo "===================="
+echo "1. If 'No common samples' error occurs:"
+echo "   - Check sample name formatting in both CSV files"
+echo "   - Ensure exact matches (case-sensitive, no extra spaces)"
+echo ""
+echo "2. If pipeline runs out of memory:"
+echo "   - Increase system RAM or reduce dataset size"
+echo "   - Lower the number of threads"
+echo ""
+echo "3. If no triplets are found:"
+echo "   - Check gene ID formats (Ensembl vs symbols)"  
+echo "   - Verify miRNA IDs match miRBase nomenclature"
+echo "   - Reduce stringency in config.yaml"
+echo ""
+
+echo "For more help, see README.md or contact the developers."

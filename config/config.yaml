@@ -1,0 +1,119 @@
+# ceRNA Pipeline Configuration File
+# Save as: config/config.yaml
+
+# ===========================================
+# QUALITY CONTROL & NORMALIZATION PARAMETERS
+# ===========================================
+
+# Minimum expression thresholds for gene filtering
+min_count: 1          # Minimum raw read count per gene
+min_samples: 2        # Minimum number of samples that must exceed min_count
+
+# Gene annotation database path
+gene_anno_path: "databases/gene_annotation.csv"
+
+# ===========================================  
+# FEATURE ENGINEERING PARAMETERS
+# ===========================================
+
+# Statistical significance thresholds
+corr_cutoff: 0.5      # Minimum absolute Pearson correlation coefficient
+pval_cutoff: 0.01     # Maximum p-value for correlation significance
+sponge_cutoff: 0.1    # Minimum SPONGE score for ceRNA effect
+
+# ===========================================
+# MACHINE LEARNING PARAMETERS  
+# ===========================================
+
+# XGBoost model parameters
+ml_params:
+  n_estimators: 100    # Number of boosting rounds
+  max_depth: 6         # Maximum tree depth
+  learning_rate: 0.1   # Step size shrinkage
+  random_state: 42     # Reproducibility seed
+
+# Label generation for supervised learning
+positive_threshold: 0.7  # Top percentile for positive class (SPONGE scores)
+
+# ===========================================
+# STATISTICAL VALIDATION PARAMETERS
+# ===========================================
+
+# Multiple testing correction
+correction_method: "fdr_bh"  # False Discovery Rate (Benjamini-Hochberg)
+alpha_level: 0.05           # Significance level for FDR
+
+# Mediation analysis parameters
+mediation_pvalue_threshold: 0.05  # Significance threshold for mediation effects
+
+# ===========================================
+# NETWORK ANALYSIS PARAMETERS
+# ===========================================
+
+# Network construction filters  
+max_network_edges: 10000     # Maximum edges to include in final network
+min_centrality_score: 0.01   # Minimum centrality for hub identification
+
+# Network file formats to generate
+output_formats:
+  - "graphml"    # For NetworkX/Python analysis
+  - "sif"        # For Cytoscape visualization
+  - "csv"        # For spreadsheet analysis
+
+# ===========================================
+# COMPUTATIONAL PARAMETERS
+# ===========================================
+
+# Parallel processing
+use_parallel: true
+chunk_size: 1000      # Process features in chunks of this size
+
+# Memory management
+max_memory_gb: 8      # Maximum memory usage limit
+
+# ===========================================
+# OUTPUT PARAMETERS
+# ===========================================
+
+# Report generation settings
+include_plots: true           # Generate interactive plots in HTML report
+plot_top_n: 50               # Number of top triplets to highlight in plots
+network_visualization: true  # Include network visualization in report
+
+# File compression
+compress_outputs: false      # Compress large output files (CSV -> CSV.gz)
+
+# ===========================================
+# DEBUG & LOGGING PARAMETERS  
+# ===========================================
+
+# Verbose output settings
+verbose: true                # Print detailed progress information
+log_level: "INFO"           # Logging level: DEBUG, INFO, WARNING, ERROR
+save_intermediate: true     # Keep intermediate files for debugging
+
+# ===========================================
+# EXAMPLE CONFIGURATIONS FOR DIFFERENT SCENARIOS
+# ===========================================
+
+# For small datasets (< 1000 genes, < 50 samples):
+# min_count: 0.5
+# min_samples: 3
+# max_network_edges: 1000
+
+# For large datasets (> 10000 genes, > 200 samples):
+# min_count: 5
+# min_samples: 10  
+# chunk_size: 5000
+# max_memory_gb: 32
+
+# For exploratory analysis (less stringent):
+# corr_cutoff: 0.3
+# pval_cutoff: 0.05
+# sponge_cutoff: 0.05
+
+# For publication-ready results (more stringent):
+# corr_cutoff: 0.7
+# pval_cutoff: 0.001
+# sponge_cutoff: 0.2
+# correction_method: "bonferroni"
